@@ -80,8 +80,13 @@ export class TasksService {
     };
   }
 
+  private ownedBy(userId: string) {
+    const oid = new Types.ObjectId(userId);
+    return { $or: [{ user: oid }, { user: userId }] };
+  }
+
   async findOne(userId: string, id: string) {
-    const task = await this.taskModel.findOne({ _id: id, user: userId });
+    const task = await this.taskModel.findOne({ _id: id, ...this.ownedBy(userId) });
     if (!task) throw new NotFoundException('Task not found');
     const weather = await this.weather.getByCity(task.location);
     return { ...task.toObject(), weather };
@@ -116,7 +121,7 @@ export class TasksService {
     dto: UpdateTaskDto,
     file?: Express.Multer.File,
   ) {
-    const task = await this.taskModel.findOne({ _id: id, user: user.userId });
+    const task = await this.taskModel.findOne({ _id: id, ...this.ownedBy(user.userId) });
     if (!task) throw new NotFoundException('Task not found');
 
     const previous = task.status;
@@ -145,7 +150,7 @@ export class TasksService {
   }
 
   async remove(userId: string, id: string) {
-    const task = await this.taskModel.findOneAndDelete({ _id: id, user: userId });
+    const task = await this.taskModel.findOneAndDelete({ _id: id, ...this.ownedBy(userId) });
     if (!task) throw new NotFoundException('Task not found');
     return { message: 'Task deleted', id: task.id };
   }

@@ -65,6 +65,9 @@ function Dashboard() {
       setToDelete(null);
       invalidate();
     },
+    onError: (err: { response?: { data?: { message?: string } } }) => {
+      window.alert(err.response?.data?.message || 'Could not delete task');
+    },
   });
 
   const tasks: Task[] = data?.data || [];
