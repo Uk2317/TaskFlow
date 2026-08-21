@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Live demo
+    url: https://task-flow-github-d813.vercel.app
+    about: Try the deployed app before filing an issue. The free-tier API can cold-start for up to a minute.
+  - name: Security vulnerability
+    url: https://github.com/Uk2317/TaskFlow/security/advisories/new
+    about: Report security problems privately — please do not open a public issue.
+  - name: Setup and contribution guide
+    url: https://github.com/Uk2317/TaskFlow/blob/main/CONTRIBUTING.md
+    about: Local setup, scripts, code conventions and the PR checklist.
