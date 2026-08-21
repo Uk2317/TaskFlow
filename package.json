@@ -19,7 +19,8 @@
     "typecheck": "npm --prefix backend run typecheck && npm --prefix frontend run typecheck",
     "test": "npm --prefix backend test",
     "test:e2e": "npm --prefix backend run test:e2e",
-    "verify": "npm run lint && npm run typecheck && npm test && npm run test:e2e && npm run build"
+    "verify": "npm run lint && npm run typecheck && npm test && npm run test:e2e && npm run build",
+    "ci:enable": "node scripts/enable-workflows.mjs"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"

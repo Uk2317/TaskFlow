@@ -7,6 +7,15 @@ GitHub rejects any push that writes to `.github/workflows/` without it.
 **Enable them with one command:**
 
 ```bash
+npm run ci:enable    # moves both files into .github/workflows/ and stages them
+git commit -m "ci: enable CI and CodeQL workflows"
+git push
+```
+
+<details>
+<summary>Or do it by hand</summary>
+
+```bash
 mkdir -p .github/workflows
 git mv .github/workflows-pending/ci.yml .github/workflows/ci.yml
 git mv .github/workflows-pending/codeql.yml .github/workflows/codeql.yml
@@ -14,6 +23,8 @@ git rm .github/workflows-pending/README.md
 git commit -m "ci: enable CI and CodeQL workflows"
 git push
 ```
+
+</details>
 
 (You can also create the two files through the GitHub web UI, which is always
 allowed for the repository owner.)

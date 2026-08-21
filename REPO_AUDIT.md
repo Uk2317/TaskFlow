@@ -4,9 +4,10 @@
 **Stack:** NestJS 11 + Mongoose · Next.js 15 (App Router) + Tailwind 4 · JWT · Resend · Cloudinary · OpenWeatherMap
 
 > **Status — updated 2026-08-21:** Batches **A**, **B** and **C** are complete (see §8).
-> Everything in §1–§3 and §6 is resolved except the Google Fonts build dependency (§1.5),
-> the GitHub description/topics (needs repo-owner permissions) and screenshots (needs a
-> running app). Batch **D** (tests + security hardening) is still open.
+> Everything in §1–§3 and §6 is resolved, including the Google Fonts build dependency (§1.5,
+> fixed by self-hosting the font). Two items need the repo owner's own credentials: the GitHub
+> description/topics and moving the workflow files into place (§11). Screenshots still need a
+> running app. Batch **D** (tests + security hardening) is still open.
 
 Verdict: **the product code is solid and well organised** — clean module boundaries, DTO validation, ownership checks on every task query, a real exception filter. What is holding the repo back is almost entirely **presentation, hygiene and trust signals**: leftover framework boilerplate, missing license/CI/env files, a broken lint gate, and zero repo metadata. For a portfolio/hiring repo, those are the first things a reviewer sees.
 
@@ -208,3 +209,58 @@ frontend  lint ✓  typecheck ✓
 Unchanged from §4 and §5 — ownership-isolation tests, auth tests, `@nestjs/throttler`,
 `helmet`, a strict CORS allowlist, escaping interpolated values in the email HTML, failing
 fast on a missing `JWT_SECRET`, Swagger at `/api/docs`, and a DB-aware health check.
+
+
+---
+
+## 11. Follow-up: build hermeticity and the two owner-only items
+
+### Fixed — §1.5 Google Fonts build dependency
+
+`next/font/google` fetched Plus Jakarta Sans from `fonts.googleapis.com` during `next build`,
+so the build died with `ECONNRESET` on any offline or firewalled runner. Replaced with
+`next/font/local`, serving the variable latin `woff2` (27 KB) committed at
+`frontend/src/app/fonts/`, sourced from `@fontsource-variable/plus-jakarta-sans` and shipped
+with its SIL Open Font License 1.1 text.
+
+Rendering is unchanged — same family, same `--font-sans` variable, weight range `200 800`,
+`display: swap` — plus an explicit system fallback stack. `next build` now completes with
+**zero network access**, which also removes a third-party dependency from every production
+deploy. Commit `92ada90`.
+
+Full gate, verified offline:
+
+```
+backend   lint ✓  typecheck ✓  unit ✓  e2e ✓  build ✓
+frontend  lint ✓  typecheck ✓  build ✓   <- previously impossible
+```
+
+### Blocked on repo-owner credentials
+
+Both fail with `HTTP 403: Resource not accessible by integration` / a `workflows` permission
+rejection for the automation account. Run these yourself, from a clone where your own GitHub
+credentials are active:
+
+**1. Enable the workflows** (~10 seconds)
+
+```bash
+npm run ci:enable
+git commit -m "ci: enable CI and CodeQL workflows"
+git push
+```
+
+The CI and CodeQL badges at the top of the README start resolving immediately afterwards.
+`.github/dependabot.yml` is unaffected and already active.
+
+**2. Set the description and topics** (~30 seconds)
+
+```bash
+gh repo edit Uk2317/TaskFlow \
+  --description "Full-stack personal task manager - NestJS + MongoDB REST API and a Next.js 15 dashboard, with JWT auth, file uploads, email notifications and live weather." \
+  --add-topic nestjs --add-topic nextjs --add-topic typescript --add-topic mongodb \
+  --add-topic jwt-authentication --add-topic tailwindcss --add-topic fullstack \
+  --add-topic task-manager --add-topic mongoose --add-topic react
+```
+
+Or in the browser: repo home → the ⚙ next to **About** → paste the description, add the
+topics, and tick "Use your GitHub Pages website" off / set the website to the Vercel URL.
