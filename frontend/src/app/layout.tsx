@@ -1,9 +1,20 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans } from 'next/font/google';
+import localFont from 'next/font/local';
 import { Providers } from '@/components/providers';
 import './globals.css';
 
-const sans = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-sans' });
+// Self-hosted so the production build never reaches out to Google Fonts at build
+// time (that made `next build` fail on any offline or firewalled runner).
+// Variable weight file, latin subset, taken from @fontsource-variable/plus-jakarta-sans.
+// Licensed under the SIL Open Font License 1.1 — see ./fonts/PlusJakartaSans-OFL.txt
+const sans = localFont({
+  src: './fonts/plus-jakarta-sans-latin-variable.woff2',
+  weight: '200 800',
+  style: 'normal',
+  display: 'swap',
+  variable: '--font-sans',
+  fallback: ['ui-sans-serif', 'system-ui', 'Segoe UI', 'Helvetica Neue', 'Arial', 'sans-serif'],
+});
 
 export const metadata: Metadata = {
   title: 'TaskFlow — Personal tasks',
