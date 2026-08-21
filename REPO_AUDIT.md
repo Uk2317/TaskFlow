@@ -264,3 +264,45 @@ gh repo edit Uk2317/TaskFlow \
 
 Or in the browser: repo home → the ⚙ next to **About** → paste the description, add the
 topics, and tick "Use your GitHub Pages website" off / set the website to the Vercel URL.
+
+
+---
+
+## 12. Deployment impact review (pre-merge)
+
+Checked what merging this branch does to the two live deployments.
+
+### Vercel (frontend) — no impact, one improvement
+
+Verified by cloning the branch fresh and running exactly what Vercel runs
+(`npm ci` then `next build`, root directory `frontend`): **build succeeds**.
+
+| Change | Effect on Vercel |
+| --- | --- |
+| Self-hosted font | Build no longer calls `fonts.googleapis.com` — one less external dependency per deploy |
+| `frontend/public/` deleted | Safe — the five SVGs were unreferenced, and `favicon.ico` lives in `src/app/` |
+| Prettier reformat of `src/` | Formatting only; build and typecheck verified |
+| New `lint:ci` / `typecheck` scripts | Not used by Vercel; `build` is unchanged |
+| Root `package.json` added | Ignored — it is not an npm-workspaces root, and `frontend/` keeps its own lockfile, so Vercel still installs and builds inside `frontend/` |
+| `.env.example` committed | Not read by Next.js; dashboard env vars are unaffected |
+
+No environment variable, build command or project setting needs to change.
+Node version resolution is unchanged: the root `.nvmrc` and root `engines` are outside the
+Vercel root directory, so the project's configured Node version still applies.
+
+### Render (backend) — one regression found and reverted
+
+Moving `@nestjs/cli` and `typescript` into `devDependencies` (§3) **would have broken the Render
+build.** Render sets `NODE_ENV=production`, and npm 10 then omits `devDependencies` on
+`npm install`. Reproduced directly:
+
+```
+NODE_ENV=production npm install   ->  nest cli: NO,  typescript: NO   # devDependencies
+NODE_ENV=production npm install   ->  nest cli: YES, typescript: YES  # dependencies (reverted)
+```
+
+Without them, `npm run build` (`npx nest build`) either fails or silently fetches the CLI from
+the network mid-build. Both packages are back in `dependencies` — which is almost certainly why
+they were there originally — and the lockfile is resynced. The README now documents the
+trade-off and the `npm ci --include=dev && npm run build` alternative for anyone who wants the
+smaller production install.

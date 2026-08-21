@@ -232,6 +232,11 @@ Resend test mode only delivers to the account owner's inbox until a domain is ve
 
 Add the backend environment variables with real values, then set `CLIENT_URL` to your Vercel URL.
 
+> Render sets `NODE_ENV=production`, and npm then skips `devDependencies` — so the Nest CLI and
+> TypeScript are kept in `dependencies` to keep `npm run build` working out of the box. If you
+> prefer them in `devDependencies`, change the build command to
+> `npm ci --include=dev && npm run build` first.
+
 **Frontend → Vercel**
 
 | Setting | Value |
