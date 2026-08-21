@@ -34,9 +34,21 @@ export class CloudinaryService {
     const safe = file.originalname.replace(/\.[^/.]+$/, '').replace(/[^a-zA-Z0-9._-]/g, '_');
     const url = await new Promise<string>((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
-        { folder: 'taskflow', resource_type: 'auto', public_id: `${Date.now()}-${safe}`.slice(0, 80) },
+        {
+          folder: 'taskflow',
+          resource_type: 'auto',
+          public_id: `${Date.now()}-${safe}`.slice(0, 80),
+        },
         (error, result) => {
-          if (error || !result) return reject(error || new Error('Upload failed'));
+          if (error || !result) {
+            return reject(
+              error instanceof Error
+                ? error
+                : new Error(
+                    typeof error?.message === 'string' ? error.message : 'Cloudinary upload failed',
+                  ),
+            );
+          }
           resolve(result.secure_url);
         },
       );

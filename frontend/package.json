@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack -H 0.0.0.0 -p 3000",
     "build": "next build",
     "start": "next start -H 0.0.0.0 -p 3000",
-    "lint": "eslint"
+    "lint": "eslint",
+    "lint:ci": "eslint --max-warnings 0",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.101.4",

@@ -2,6 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 
+type OpenWeatherResponse = {
+  name: string;
+  main: { temp: number };
+  weather: { description?: string; icon?: string }[];
+};
+
 export type WeatherPayload = {
   temp: number;
   description: string;
@@ -41,10 +47,13 @@ export class WeatherService {
   private async fromOpenWeather(city: string): Promise<WeatherPayload | null> {
     const apiKey = this.config.get<string>('OPENWEATHER_API_KEY');
     if (!apiKey) return null;
-    const { data } = await axios.get('https://api.openweathermap.org/data/2.5/weather', {
-      params: { q: city, appid: apiKey, units: 'metric' },
-      timeout: 5000,
-    });
+    const { data } = await axios.get<OpenWeatherResponse>(
+      'https://api.openweathermap.org/data/2.5/weather',
+      {
+        params: { q: city, appid: apiKey, units: 'metric' },
+        timeout: 5000,
+      },
+    );
     return {
       temp: Math.round(data.main.temp),
       description: (data.weather[0]?.description || '').trim(),

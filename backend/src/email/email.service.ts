@@ -14,7 +14,18 @@ export class EmailService {
     this.from = config.get<string>('EMAIL_FROM') || 'TaskFlow <onboarding@resend.dev>';
   }
 
-  async sendTaskCreated(to: string, name: string, task: { title: string; status: string; priority: string; dueDate?: Date; location?: string; description?: string }) {
+  async sendTaskCreated(
+    to: string,
+    name: string,
+    task: {
+      title: string;
+      status: string;
+      priority: string;
+      dueDate?: Date;
+      location?: string;
+      description?: string;
+    },
+  ) {
     return this.send(
       to,
       `Task created: ${task.title}`,
@@ -49,7 +60,12 @@ export class EmailService {
       return;
     }
     try {
-      const { data, error } = await this.resend.emails.send({ from: this.from, to: [to], subject, html });
+      const { data, error } = await this.resend.emails.send({
+        from: this.from,
+        to: [to],
+        subject,
+        html,
+      });
       if (error) throw new Error(error.message);
       this.logger.log(`[email:sent] ${data?.id} → ${to}`);
     } catch (err) {

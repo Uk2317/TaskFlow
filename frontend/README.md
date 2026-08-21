@@ -1,36 +1,60 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TaskFlow Web
 
-## Getting Started
+Next.js 15 (App Router) client for TaskFlow — login/register, the task dashboard,
+filtering and pagination, file attachments and weather badges. Styled with Tailwind CSS 4,
+server state handled by TanStack Query.
 
-First, run the development server:
+> Full project overview, architecture and deployment notes live in the [root README](../README.md).
+
+## Requirements
+
+- Node.js 20.x (see `.nvmrc`)
+- The [TaskFlow API](../backend) running locally, or a deployed API URL
+
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
+npm install
+npm run dev               # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+With the default `NEXT_PUBLIC_API_URL=/api`, `next.config.ts` rewrites `/api/*` to the Nest
+process (`API_PROXY_TARGET`, default `http://127.0.0.1:5000`) — so no CORS setup is needed in
+development. In production set `NEXT_PUBLIC_API_URL` to the deployed API origin, e.g.
+`https://your-service.onrender.com/api`, and redeploy (`NEXT_PUBLIC_*` values are inlined at build time).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Script | Purpose |
+| --- | --- |
+| `npm run dev` | Dev server with Turbopack on `0.0.0.0:3000` |
+| `npm run build` | Production build |
+| `npm start` | Serve the production build |
+| `npm run lint` | ESLint (`eslint-config-next`) |
+| `npm run typecheck` | `tsc --noEmit` |
 
-## Learn More
+## Layout
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/
+│   ├── layout.tsx      root layout, fonts, providers
+│   ├── page.tsx        redirects to /dashboard or /login
+│   ├── login/          sign in
+│   ├── register/       sign up
+│   └── dashboard/      task list, filters, stats, pagination
+├── components/         task-card, task-form, weather-badge, protected, providers
+├── context/            auth-context — session state and bootstrap
+└── lib/api.ts          Axios instance, JWT handling, typed endpoints
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Notes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Routes under `/dashboard` are wrapped by `<Protected>`, which redirects unauthenticated users to `/login`.
+- The JWT is read from storage by an Axios request interceptor in `lib/api.ts`.
+- Cloudinary is the only allowed remote image host (`next.config.ts` → `images.remotePatterns`).
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT — see [LICENSE](../LICENSE).

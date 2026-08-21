@@ -43,13 +43,21 @@ export class TasksController {
   }
 
   @Post()
-  @UseInterceptors(FileInterceptor('file', { storage: memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } }))
-  create(@Req() req: Authed, @Body() dto: CreateTaskDto, @UploadedFile() file?: Express.Multer.File) {
+  @UseInterceptors(
+    FileInterceptor('file', { storage: memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } }),
+  )
+  create(
+    @Req() req: Authed,
+    @Body() dto: CreateTaskDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
     return this.tasks.create(req.user, dto, file);
   }
 
   @Put(':id')
-  @UseInterceptors(FileInterceptor('file', { storage: memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } }))
+  @UseInterceptors(
+    FileInterceptor('file', { storage: memoryStorage(), limits: { fileSize: 8 * 1024 * 1024 } }),
+  )
   update(
     @Req() req: Authed,
     @Param('id') id: string,

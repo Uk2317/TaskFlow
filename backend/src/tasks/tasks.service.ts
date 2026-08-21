@@ -71,7 +71,9 @@ export class TasksService {
       ...task.toObject(),
       weather: this.weather.cached(task.location),
     }));
-    void Promise.all(tasks.filter((t) => t.location).map((t) => this.weather.getByCity(t.location)));
+    void Promise.all(
+      tasks.filter((t) => t.location).map((t) => this.weather.getByCity(t.location)),
+    );
 
     return {
       data,

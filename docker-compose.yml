@@ -1,0 +1,36 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: taskflow-mongo
+    restart: unless-stopped
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_DATABASE: taskflow
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', "db.adminCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  # Optional web UI for poking at the database: http://localhost:8081
+  # Start it with:  docker compose --profile tools up -d
+  mongo-express:
+    image: mongo-express:1
+    container_name: taskflow-mongo-ui
+    restart: unless-stopped
+    profiles: [tools]
+    depends_on:
+      mongo:
+        condition: service_healthy
+    ports:
+      - '8081:8081'
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://mongo:27017
+      ME_CONFIG_BASICAUTH: 'false'
+
+volumes:
+  mongo-data:

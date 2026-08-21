@@ -38,4 +38,4 @@ async function bootstrap() {
   console.log(`TaskFlow API listening on http://0.0.0.0:${port}`);
 }
 
-bootstrap();
+void bootstrap();
