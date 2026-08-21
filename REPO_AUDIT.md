@@ -3,10 +3,10 @@
 **Repo:** `Uk2317/TaskFlow` (public) · **Audited:** 2026-08-21 · **Branch:** `arena/01a023c1-taskflow`
 **Stack:** NestJS 11 + Mongoose · Next.js 15 (App Router) + Tailwind 4 · JWT · Resend · Cloudinary · OpenWeatherMap
 
-> **Status — updated 2026-08-21:** Batches **A** and **B** are complete (see sections 7 and 8).
-> Everything in §1 is resolved except the Google Fonts build dependency (§1.5), and §2/§3 are
-> resolved except the GitHub description/topics, which need repo-owner permissions.
-> Batches **C** (README glow-up) and **D** (tests + hardening) are still open.
+> **Status — updated 2026-08-21:** Batches **A**, **B** and **C** are complete (see §8).
+> Everything in §1–§3 and §6 is resolved except the Google Fonts build dependency (§1.5),
+> the GitHub description/topics (needs repo-owner permissions) and screenshots (needs a
+> running app). Batch **D** (tests + security hardening) is still open.
 
 Verdict: **the product code is solid and well organised** — clean module boundaries, DTO validation, ownership checks on every task query, a real exception filter. What is holding the repo back is almost entirely **presentation, hygiene and trust signals**: leftover framework boilerplate, missing license/CI/env files, a broken lint gate, and zero repo metadata. For a portfolio/hiring repo, those are the first things a reviewer sees.
 
@@ -182,3 +182,29 @@ frontend  lint ✓  typecheck ✓
   activates them; see the README in that folder.
 - **§1.5 Google Fonts build dependency** — left as-is. It only bites in offline builds, and
   self-hosting the font requires downloading the woff2, which this sandbox cannot reach.
+
+
+---
+
+## 9. Completed work log (Batch C)
+
+| # | Item | Commit |
+| --- | --- | --- |
+| 6.1–6.2 | README rewritten: hero block, demo link, stack badges, feature list, request-flow explanation, collapsible API examples, roadmap | `5b86582` |
+| 6.3 | `docker-compose.yml` (MongoDB 7 + optional mongo-express) and an explicit required-vs-optional env table — the graceful-degradation behaviour is now documented, not hidden | `7f59e3a` |
+| 6.6 | Root `package.json`: `setup`, `db:up`, `dev` (both apps, one command), `lint`, `typecheck`, `test`, `build`, `verify`. Uses `--prefix` rather than npm workspaces so the Render/Vercel root directories keep working | `7f59e3a` |
+| 6.4 | `docs/screenshots/` with capture instructions; the README block stays commented out rather than shipping broken image links | `5b86582` |
+| 2 | `CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md` (Contributor Covenant 2.1), issue forms, PR template, contact links | `710c894`, `1bed0ba` |
+
+### Not done, and why
+
+- **Screenshots** — the sandbox has no MongoDB binary, no Docker and no outbound access to
+  Google Fonts, so the app cannot be run to capture genuine images. Generating fake UI
+  screenshots would misrepresent the product. Instructions are in `docs/screenshots/README.md`.
+- **GitHub description/topics** — still blocked on `403: Resource not accessible by integration`.
+
+## 10. Remaining: Batch D
+
+Unchanged from §4 and §5 — ownership-isolation tests, auth tests, `@nestjs/throttler`,
+`helmet`, a strict CORS allowlist, escaping interpolated values in the email HTML, failing
+fast on a missing `JWT_SECRET`, Swagger at `/api/docs`, and a DB-aware health check.
