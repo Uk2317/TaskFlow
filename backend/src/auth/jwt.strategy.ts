@@ -6,7 +6,8 @@ import { Request } from 'express';
 import { UsersService } from '../users/users.service';
 
 const fromRequest = (req: Request): string | null => {
-  const header = req.headers.authorization || req.headers['x-access-token'] || req.headers['x-taskflow-token'];
+  const header =
+    req.headers.authorization || req.headers['x-access-token'] || req.headers['x-taskflow-token'];
   if (typeof header === 'string') {
     return header.startsWith('Bearer ') ? header.slice(7).trim() : header.trim();
   }

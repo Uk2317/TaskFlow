@@ -43,7 +43,9 @@ export type Task = {
 
 const readToken = () =>
   (typeof window !== 'undefined' ? window.__TASKFLOW_TOKEN__ : null) ||
-  (typeof window !== 'undefined' ? safeGet(localStorage, TOKEN_KEY) || safeGet(sessionStorage, TOKEN_KEY) : null);
+  (typeof window !== 'undefined'
+    ? safeGet(localStorage, TOKEN_KEY) || safeGet(sessionStorage, TOKEN_KEY)
+    : null);
 
 export const getAuthToken = () => readToken();
 
@@ -86,12 +88,14 @@ API.interceptors.request.use((config) => {
 
 export const authAPI = {
   login: (payload: { email: string; password: string }) => API.post('/auth/login', payload),
-  register: (payload: { name: string; email: string; password: string }) => API.post('/auth/register', payload),
+  register: (payload: { name: string; email: string; password: string }) =>
+    API.post('/auth/register', payload),
   me: () => API.get(withToken('/auth/me')),
 };
 
 export const taskAPI = {
-  list: (params: Record<string, string | number | undefined>) => API.get(withToken('/tasks'), { params }),
+  list: (params: Record<string, string | number | undefined>) =>
+    API.get(withToken('/tasks'), { params }),
   create: (formData: FormData) => API.post(withToken('/tasks'), formData),
   update: (id: string, formData: FormData) => API.put(withToken(`/tasks/${id}`), formData),
   remove: (id: string) => API.delete(withToken(`/tasks/${id}`)),

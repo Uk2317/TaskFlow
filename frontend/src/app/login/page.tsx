@@ -44,27 +44,51 @@ export default function LoginPage() {
         <h1 className="text-2xl font-extrabold">Sign in</h1>
         <p className="mt-1 text-sm text-slate-500">Your tasks stay private to this account.</p>
         <form onSubmit={onSubmit} className="mt-7 space-y-4">
-          {error && <div className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">{error}</div>}
+          {error && (
+            <div className="rounded-xl border border-rose-200 bg-rose-50 px-3 py-2 text-sm text-rose-700">
+              {error}
+            </div>
+          )}
           <label className="block text-sm font-medium">
             Email
             <span className="relative mt-1.5 block">
               <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-              <input type="email" required value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} className="w-full rounded-xl border border-slate-200 py-2.5 pl-10 pr-3 outline-none focus:ring-2 focus:ring-indigo-500" />
+              <input
+                type="email"
+                required
+                value={form.email}
+                onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                className="w-full rounded-xl border border-slate-200 py-2.5 pl-10 pr-3 outline-none focus:ring-2 focus:ring-indigo-500"
+              />
             </span>
           </label>
           <label className="block text-sm font-medium">
             Password
             <span className="relative mt-1.5 block">
               <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-              <input type="password" required minLength={6} value={form.password} onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))} className="w-full rounded-xl border border-slate-200 py-2.5 pl-10 pr-3 outline-none focus:ring-2 focus:ring-indigo-500" />
+              <input
+                type="password"
+                required
+                minLength={6}
+                value={form.password}
+                onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
+                className="w-full rounded-xl border border-slate-200 py-2.5 pl-10 pr-3 outline-none focus:ring-2 focus:ring-indigo-500"
+              />
             </span>
           </label>
-          <button type="submit" disabled={loading} className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 py-2.5 text-sm font-semibold text-white disabled:opacity-60">
+          <button
+            type="submit"
+            disabled={loading}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-indigo-600 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
+          >
             {loading ? 'Signing in…' : 'Continue'} <ArrowRight className="h-4 w-4" />
           </button>
         </form>
         <p className="mt-6 text-center text-sm text-slate-500">
-          New here? <Link href="/register" className="font-semibold text-indigo-600">Create an account</Link>
+          New here?{' '}
+          <Link href="/register" className="font-semibold text-indigo-600">
+            Create an account
+          </Link>
         </p>
       </div>
     </main>
