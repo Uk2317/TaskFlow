@@ -1,6 +1,13 @@
 # TaskFlow
 
+[![CI](https://github.com/Uk2317/TaskFlow/actions/workflows/ci.yml/badge.svg)](https://github.com/Uk2317/TaskFlow/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/Uk2317/TaskFlow/actions/workflows/codeql.yml/badge.svg)](https://github.com/Uk2317/TaskFlow/actions/workflows/codeql.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![Node](https://img.shields.io/badge/node-20.x-5FA04E?logo=node.js&logoColor=white)](./.nvmrc)
+
 Personal task manager. Each account only sees its own tasks.
+
+**Live demo:** https://task-flow-github-d813.vercel.app
 
 **Stack:** NestJS + MongoDB (Mongoose) · Next.js 15 (App Router) · JWT · Resend · Cloudinary · OpenWeatherMap
 
@@ -109,4 +116,4 @@ Then set Render `CLIENT_URL` to the Vercel URL.
 
 ## License
 
-MIT
+[MIT](./LICENSE)
